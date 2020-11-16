@@ -1,0 +1,98 @@
+﻿@using Kztek.Web.Core.Functions
+@using Kztek.Model.CustomModel
+@using Kztek.Web.Core.Extensions
+@using Kztek.Web.Attributes
+
+@model  PageModel<Kztek.Model.Models.tblCustomer>
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+ 
+    var listCusGr = (List<Kztek.Model.Models.tblCustomerGroup>)ViewBag.lstCustomerGr;
+}
+<div class="page-header">
+    <h1> @ViewBag.Title  (@Model.TotalItem)</h1>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="divScroll">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã KH</th>
+                        <th>Tên KH</th>
+                        <th>Điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th>Nhóm KH</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Data.Any())
+                    {
+                        var count = (Model.PageIndex - 1) * Model.PageSize;
+                        foreach (var item in Model.Data)
+                        {
+                            count++;
+                            <tr>
+                                <td>
+                                    @count
+                                </td>
+                                <td>
+                                    @item.CustomerCode
+                                </td>
+                                <td>
+                                    @item.CustomerName
+                                </td>
+                                <td>
+                                    @item.Mobile
+                                </td>
+                                <td>
+                                    @item.Address
+                                </td>
+                                <td>
+                                    @{
+                                        var customerGrId = !string.IsNullOrEmpty(item.CustomerGroupID) ?
+                                             item.CustomerGroupID.ToLower() : "";
+                                        var obj = listCusGr.FirstOrDefault(n => n.CustomerGroupID.ToString().Equals(customerGrId));
+
+                                        if (obj != null)
+                                        {
+                                            <span>@obj.CustomerGroupName</span>
+                                        }
+
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Inactive == false)
+                                    {
+                                        <span class="label label-sm label-success">Không hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-sm label-success">Đang hoạt động</span>}
+
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.Data.Any())
+    {
+        <div class="col-xs-12">
+            <div class="pull-right">
+                @Html.GeneratePagingFooter(Model.TotalPage, Model.PageIndex, Model.PageSize, "pagination", x => Url.Action("Index", "tblCustomers", new
+           {
+               page = x,
+           }))
+            </div>
+        </div>
+    }
+
+</div>

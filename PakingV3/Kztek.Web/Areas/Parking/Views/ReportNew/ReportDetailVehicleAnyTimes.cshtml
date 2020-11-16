@@ -1,0 +1,209 @@
+﻿@using Kztek.Web.Core.Functions
+@using Kztek.Model.CustomModel
+@using Kztek.Web.Core.Extensions
+@model  PageModel<Kztek.Model.Models.ReportIn>
+@{
+    ViewBag.Title = "Chi tiết xe trong bãi tại thời điểm bất kỳ ";
+    var listCardGr = (List<SelectListModel2>)ViewBag.Cardgroups;
+    var listLans = (List<Kztek.Model.Models.tblLane>)ViewBag.Lanes;
+    var listUser = (List<Kztek.Model.Models.User>)ViewBag.Users;
+    string controller = this.ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="page-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm("ReportDetailVehicleAnyTimes", "ReportNew", FormMethod.Get, new { id = "fbtReport" }))
+        {
+
+            <div class="col-md-2 col-xs-12 divboxmd">
+                <label class="col-sm-12 control-label no-padding-right"> Từ khóa</label>
+                <div>
+                    <input type="text" name="key" value="@ViewBag.KeyWord" placeholder="Hãy nhập ở đây...." />
+
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12 divboxmd">
+                <label class="col-sm-12 control-label no-padding-right">Thời điểm</label>
+                <div class="input-group">
+                    @Html.TextBox("fromdate", (string)ViewBag.fromDate, new { @class = "form-control datepicker" })
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-12 divboxmd ">
+                <label class="control-label">Nhóm thẻ</label>
+                <div>
+                    @Html.Action(
+                        "DroplistMultiSelectTemplate1",
+                         "CommonUse", new
+                         {
+                             _dt = ViewBag.CardGroupDT,
+                             itemValue = "ItemValue",
+                             itemText = "ItemText",
+                             selectedValues = ViewBag.CardGroupId,
+                             Modelname = "ddlcard"
+
+
+
+                         })
+                    @Html.Hidden("cardgroup")
+
+                </div>
+            </div>
+
+            <div class="col-md-2 col-xs-12 divboxmd">
+                <label class="control-label">Nhóm xe</label>
+                <div>
+                    @Html.Action("DroplistMultiSelectTemplate1", "CommonUse", new { _dt = ViewBag.VehicleGroupDT, itemValue = "VehicleGroupID", itemText = "VehicleGroupName", selectedValues = ViewBag.VehicleID, Modelname = "ddlvehiclegroupid" })
+                    @Html.Hidden("vehiclegroupid")
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-2 col-xs-12 divboxmd ">
+                    <label class="control-label">Nhóm khách hàng</label>
+                    @Html.DropDownList("customegroup", new SelectList(ViewBag.CustomerGroup, "ItemValue", "ItemText", ViewBag.CustomGroupId), "Select here", new { @class = "form-control chosen-select" })
+                </div>
+
+                <div class="col-md-12 col-xs-12 divboxmd ">
+                    @Html.Action("Actions", "Home", new { ActionName = "Search", ControllerName = "ReportDetailVehicleAnyTimes" })
+                    @Html.Action("Actions", "Home", new { ActionName = "Index", ControllerName = "ReportDetailVehicleAnyTimes" , controller ="ReportNew" })
+                </div>
+                }
+            </div>
+
+</div>
+
+<div class="hr hr-18 dotted hr-24"></div>
+<div class="row">
+    <div class="" col-xs-12">
+        <div class="divScroll">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr class="headerSort">
+                        <th class="center">STT</th>
+                        <th class="center hidden-480">CardNo</th>
+                        <th class="center hidden-480">Mã Thẻ</th>
+                        <th class="center hidden-480">Biển số</th>
+                        <th class="center hidden-480">Thời gian vào</th>
+                        <th class="center hidden-480">Hình ảnh vào</th>
+                        <th class="center hidden-480">Nhóm xe</th>
+                        <th class="center hidden-480">Người dùng</th>
+                        <th class="center hidden-480">Làn vào</th>
+                        <th class="center hidden-480">Giám sát vào</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Data.Any())
+                    {
+                        foreach (var item in Model.Data)
+                        {
+                            <tr>
+                                <td>@item.RowNumber</td>
+                                <td class="text-center hidden-480">@item.CardNo</td>
+                                <td class="text-left hidden-480">@item.CardNumber</td>
+                                <td class="text-left hidden-480">@item.Plate</td>
+                                <td class="text-left hidden-480">
+                                    @if (item.DateTimeIn != null)
+                                    {
+                                        @Convert.ToDateTime(item.DateTimeIn).ToString("dd/MM/yyy HH:mm:ss")
+                                    }
+                                </td>
+                                <td class="center">
+                                    <div class="ace-thumbnails clearfix">
+                                        @if (!string.IsNullOrWhiteSpace(item.PicIn1))
+                                        {
+                                            @Html.Action("ImageFTP", new { filename = item.PicIn1, description = "Ảnh", type = "INOUT" })
+                                        }
+                                    </div>
+                                </td>
+                                <td class="center">
+                                    @{
+                                        var objcard = listCardGr != null ? listCardGr.FirstOrDefault(n => n.ItemValue.ToString().Equals(item.CardGroupID)) : null;
+                                        if (objcard != null)
+                                        {
+                                            <span>@objcard.ItemText</span>
+                                        }
+                                    }
+                                </td>
+                                <td>@item.CustomerName</td>
+                                <td class="center">
+                                    @{
+                                        var objlane = listLans != null ? listLans.FirstOrDefault(n => n.LaneID.ToString().Equals(item.LaneIDIn)) : null;
+                                        if (objlane != null)
+                                        {
+                                            <span>@objlane.LaneName</span>
+                                        }
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @{
+                                        var objuser = listUser != null ? listUser.FirstOrDefault(n => n.Id.ToString().Equals(item.UserIDIn)) : null;
+                                        if (objuser != null)
+                                        {
+                                            <span>@objuser.Username</span>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (Model.Data.Any())
+    {
+        <div class="col-xs-12">
+            <div class="pull-right">
+                @Html.GeneratePagingFooter(Model.TotalPage, Model.PageIndex, Model.PageSize, "pagination", x => Url.Action("ReportDetailVehicleAnyTimes", "ReportNew", new
+           {
+               page = x,
+               key = ViewBag.KeyWord,
+               cardgroup = ViewBag.CardGroupId,
+               customegroup = ViewBag.CustomGroupId,
+               vehiclegroupid  = ViewBag.VehicleID
+
+           }))
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('button[name=btnFilter]').click(function () {
+                $('#fbtReport').submit();
+            });
+            $('#ddlcard').change(function () {
+                var str = '';
+                var cmd = $(this);
+                cmd.parent().find('ul.multiselect-container li.active').each(function () {
+                    var _cmd = $(this);
+                    str += _cmd.find('input[type=checkbox]').val() + ',';
+                });
+                $('#cardgroup').val(str);
+            });
+
+            $('#ddlvehiclegroupid').change(function () {
+                var str = '';
+                var cmd = $(this);
+                cmd.parent().find('ul.multiselect-container li.active').each(function () {
+                    var _cmd = $(this);
+                    str += _cmd.find('input[type=checkbox]').val() + ',';
+                });
+                $('#vehiclegroupid').val(str);
+            });
+        })
+    </script>
+
+    }

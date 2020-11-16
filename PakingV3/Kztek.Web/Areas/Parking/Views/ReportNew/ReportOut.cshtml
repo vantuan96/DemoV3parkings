@@ -1,0 +1,328 @@
+﻿@using Kztek.Model.CustomModel
+@using Kztek.Web.Core.Extensions
+@using Kztek.Web.Attributes
+@using Kztek.Web.Core.Functions
+@model  PageModel<Kztek.Model.Models.ReportInOut>
+@{
+
+    ViewBag.Title = "Báo cáo xe ra";
+
+    var listCardGroup = (List<SelectListModel2>)ViewBag.CardGroups;
+    var listLane = (List<Kztek.Model.Models.tblLane>)ViewBag.ListLane;
+    var listUser = (List<Kztek.Model.Models.User>)ViewBag.User;
+
+
+    ;
+    bool isTime = Convert.ToBoolean(ViewBag.CheckTime);
+    string controller = this.ViewContext.RouteData.Values["controller"].ToString();
+
+}
+
+<div class="page-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</div>
+<div class="row">
+    @using (Html.BeginForm("ReportOut", "ReportNew", FormMethod.Get, new { id = "fbtReport" }))
+    {
+        <div class="col-md-2 col-xs-12 divboxmd">
+            <label class="col-sm-12 control-label no-padding-right">   Từ khóa     </label>
+            <div class="">
+                <input type="text" name="key" value="@ViewBag.KeyWord" placeholder="Nhập vào đây..." class="form-control" />
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12 divboxmd">
+            <label class="col-sm-12 control-label no-padding-right">Từ ngày</label>
+            <div class="input-group">
+                @Html.TextBox("fromdate", (string)ViewBag.Fromdate, new { @class = "form-control datepicker" })
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+
+
+        </div>
+
+        <div class="col-md-3 col-xs-12 divboxmd">
+            <label class="col-sm-12 control-label no-padding" -right>Đến ngày</label>
+            <div class="input-group">
+                @Html.TextBox("todate", (string)@ViewBag.ToDate, new { @class = "form-control datepicker" })
+
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12 divboxmd line-height-240">
+            <label>
+                <input type="radio" name="ischeckTime" value="true" class="ace" @string.Format("{0}", isTime ? "checked" : "") />
+                <span class="lbl">Lọc theo thời gian vào</span>
+            </label>
+        </div>
+
+        <div class="col-md-3 col-xs-12 divboxmd line-height-340">
+            <label>
+                <input type="radio" name="ischeckTime" value="false" class="ace" @string.Format("{0}", isTime ? "" : "checked") />
+                <span class="lbl">Lọc theo thời gian ra</span>
+            </label>
+        </div>
+
+        <div class="col-md-3 col-xs-12 divboxmd">
+            <label class="control-label">Làn</label>
+            <div>
+                @*@Html.DropDownList("DroplistMultiSelectTemplate1" , "CommonUse",new {_dt = ViewBag.LaneDT, itemValue= "ItemValue", itemText ="ItemText", selectedValues= ViewBag.LaneGroupID, Modelname="ddllane"  })*@
+                @Html.Action(
+
+               "DroplistMultiSelectTemplate1",
+                "CommonUse", new
+                {
+                    _dt = ViewBag.LaneDT,
+                    itemValue = "LaneID",
+                    itemText = "LaneName",
+                    selectedValues = ViewBag.LaneID,
+                    Modelname = "ddllane"
+                })
+                @Html.Hidden("lane")
+            </div>
+        </div>
+
+        <div class="col-md-2 col-xs-12 divboxmd ">
+            <label class="control-label">Nhóm thẻ</label>
+            <div>
+                @Html.Action(
+      "DroplistMultiSelectTemplate1",
+      "CommonUse", new
+      {
+          _dt = ViewBag.CarGroupDT,
+          itemValue = "ItemValue",
+          itemText = "ItemText",
+          selectedValues = ViewBag.CardGroupId,
+          Modelname = "ddlcard"
+
+
+      })
+                @Html.Hidden("cardgroup")
+
+            </div>
+        </div>
+
+        <div class="col-md-3 col-xs-12 divboxmd">
+            <label class="control-label  ">NHóm khách hàng</label>
+            @Html.DropDownList("groupCustomer" , new SelectList(ViewBag.CustomerGr, "ItemValue", "ItemText", ViewBag.CustomerGrID) , "--Select here--", new { @class = "form-control chosen-select" })
+        </div>
+
+        <div class="col-md-12 col-xs-12 divboxmd    ">
+            @Html.Action("Actions", "Home", new { ActionName = "Search", ControllerName = "controller" })
+            @Html.Action("Actions","Home", new { ActionName = "Index1", ControllerName = "ReportOut" })
+        </div>
+
+    }
+</div>
+<div class="hr hr-18 dotted hr-24"></div>
+
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="divScroll">
+            <table class="table  table-bordered table-hover">
+                <thead>
+
+                    <tr class="headerSort">
+
+                        <th class="" center hidden-480"> STT</th>
+                        <th class="" center hidden-480"> CardNo</th>
+                        <th class="" center hidden-480"> Mã Thẻ</th>
+                        <th class="" center hidden-480"> Biển Số</th>
+                        <th class="" center hidden-480"> Thời gian vào</th>
+                        <th class="" center hidden-480"> Thời gian ra</th>
+                        <th class="" center hidden-480"> Ảnh vào </th>
+                        <th class="" center hidden-480"> Ảnh ra</th>
+                        <th class="" center hidden-480"> Nhóm thẻ</th>
+                        <th class="" center hidden-480"> Khách hàng</th>
+                        <th class="" center hidden-480"> Làn vào</th>
+                        <th class="" center hidden-480"> Làn ra</th>
+                        <th class="" center hidden-480"> Giám sát vào</th>
+                        <th class="" center hidden-480"> Giám sát ra</th>
+                        <th class="" center hidden-480"> Số tiền</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+
+                    @if (Model.Data.Any())
+                    {
+                        var count = (Model.PageIndex - 1) * Model.PageSize;
+                        foreach (var item in Model.Data)
+                        {
+                            count++;
+                            <tr>
+                                <td class="text-center">@item.RowNumber</td>
+                                <td class="">           @item.CardNo</td>
+                                <td class="">           @item.CardNumber</td>
+                                <td>                    @item.Plate </td>
+
+
+
+                                <td>
+                                    @Convert.ToDateTime(item.DateTimeIn).ToString("dd/MM/yyy HH:mm:ss")
+                                </td>
+
+
+
+                                <td>
+                                    @if (item.DateTimeOut != null)
+                                    {
+                                        @Convert.ToDateTime(item.DateTimeOut).ToString("dd/MM/yyy HH:mm:ss")
+                                    }
+                                </td>
+                                <td class="center">
+                                    <div class="ace-thumbnails clearfix" style="display:inline-flex">
+                                        @if (!string.IsNullOrWhiteSpace(item.PicIn1))
+                                        {
+                                            @Html.Action("ImageFTP", new { filename = item.PicIn1, description = "Ảnh", type = "INOUT" })
+                                        }
+                                    </div>
+
+                                </td>
+                                <td class="center">
+                                    <div class="ace-thumbnails clearfix" style="display:inline-flex">
+                                        @if (!string.IsNullOrWhiteSpace(item.PicOut1))
+                                        {
+                                            @Html.Action("ImageFTP", new { filename = item.PicOut1, description = "Ảnh", type = "INOUT" })
+                                        }
+                                    </div>
+
+                                </td>
+
+                                @*// nhóm thẻ*@
+                                <td>
+                                    @{
+                                        var objCardGroup = listCardGroup != null ? listCardGroup.FirstOrDefault(n => n.ItemValue.ToString().Equals(item.CardGroupID)) : null;
+                                        if (objCardGroup != null)
+                                        {
+                                            <span>@objCardGroup.ItemText</span>
+                                        }
+
+                                    }
+
+                                </td>
+                                <td>@item.CustomerName</td>
+
+                                @*Làn vào*@
+                                <td>
+                                    @{
+                                        var objLane = listLane != null ? listLane.FirstOrDefault(n => n.LaneID.ToString().Equals(item.LaneIDIn)) : null;
+                                        if (objLane != null)
+                                        {
+                                            <span>@objLane.LaneName</span>
+                                        }
+                                    }
+
+                                </td>
+
+
+                                @*Làn ra*@
+                                <td>
+                                    @{
+                                        var objLane1 = listLane != null ? listLane.FirstOrDefault(n => n.LaneID.ToString().Equals(item.LaneIDIn)) : null;
+                                        if (objLane1 != null)
+                                        {
+                                            <span>@objLane.LaneName</span>
+                                        }
+                                    }
+
+                                </td>
+                                @*Giám sát vào*@
+                                <td>
+                                    @{
+                                        var objUser = listUser != null ? listUser.FirstOrDefault(n => n.Id.ToString().Equals(item.UserIDIn)) : null;
+                                        if (objUser != null)
+                                        {
+                                            <span>@objUser.Username</span>
+                                        }
+                                    }
+                                </td>
+
+                                @*Giám sát vào*@
+                                <td>
+                                    @{
+                                        var objUserOut = listUser != null ? listUser.FirstOrDefault(n => n.Id.ToString().Equals(item.UserIDOut)) : null;
+                                        if (objUserOut != null)
+                                        {
+                                            <span>@objUser.Username</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @item.Moneys
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+
+
+    <div class="col-xs-12">
+        <div class="pull-right">
+
+            @Html.GeneratePagingFooter(Model.TotalPage, Model.PageIndex, Model.PageSize, "pagination", x => Url.Action("ReportOut", "ReportNew", new
+       {
+           page = x,
+           ischeckTime = ViewBag.CheckTime,
+           fromdate = ViewBag.Fromdate,
+           todate = ViewBag.ToDate,
+           lane = ViewBag.LaneID,
+          
+                groupCustomer = ViewBag.CustomerGrID
+
+
+            }))
+        </div>
+
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('button[name=btnFilter]').click(function () {
+                $('#fbtReport').submit();
+            });
+            $('#ddllane').change(function () {
+                var cmd = $(this);
+                var str = "";
+                cmd.parent().find('ul.multiselect-container li.active').each(function () {
+
+                    var _cmd = $(this);
+                    str += _cmd.find('input[type=checkbox]').val() + ',';
+                })
+                $('#lane').val(str);
+
+            });
+            $('#ddlcard').change(function () {
+                var cmd = $(this);
+                var str = "";
+                cmd.parent().find('ul.multiselect-container li.active').each(function () {
+
+                    var _cmd = $(this);
+                    str += _cmd.find('input[type=checkbox]').val() + ',';
+                })
+                $('#cardgroup').val(str);
+
+            });
+
+        })
+    </script>
+
+
+}

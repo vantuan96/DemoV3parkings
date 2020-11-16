@@ -1,0 +1,75 @@
+﻿@model Kztek.Model.CustomModel.SelectListModel
+@using Kztek.Web.Attributes
+@using Kztek.Web.Core.Functions;
+@{
+    ViewBag.Title = "Home Page";
+    var Dictionary = FunctionHelper.GetLocalizeDictionary("Home", "Index");
+    var DictionaryAction = FunctionHelper.GetLocalizeDictionary("Home", "Action");
+}
+
+@{
+    CheckAuthorizeAction.Instance.CheckPemission("Home", "ViewIndex");
+    if (CheckAuthorizeAction.Instance.Check)
+    {
+        <div class="row">
+            @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "frmHome" }))
+            {
+                <div class="col-md-3 col-xs-12 divboxmd">
+                    @Dictionary["fromdate"]
+                    <div class="input-group">
+                        @Html.TextBox("fromdate", (string)ViewBag.fromdateValue, new { @class = "form-control datepicker" })
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12 divboxmd">
+                    @Dictionary["todate"]
+                    <div class="input-group">
+                        @Html.TextBox("todate", (string)ViewBag.todateValue, new { @class = "form-control datepicker" })
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xs-12 divboxmd">
+                    <button class="btn btn-sm btn-primary" type="submit" name="btnFilter">
+                        <i class="fa fa-search"></i>
+                        @DictionaryAction["Search"]
+                    </button>
+                </div>
+            }
+        </div>
+
+        <div class="hr hr-18 dotted hr-24"></div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="infobox infobox-green">
+                    <div class="infobox-data">
+                        <span class="infobox-data-number" id="id_dashboard1" runat="server">@Model.ItemValue</span>
+                        <div class="infobox-content">@Dictionary["vehiclein"]</div>
+                    </div>
+                </div>
+
+                <div class="infobox infobox-blue">
+                    <div class="infobox-data">
+                        <span class="infobox-data-number" id="id_dashboard2" runat="server">@Model.ItemText</span>
+                        <div class="infobox-content">@Dictionary["vehicleout"]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".page_home").addClass("active");
+
+        });
+    </script>
+}

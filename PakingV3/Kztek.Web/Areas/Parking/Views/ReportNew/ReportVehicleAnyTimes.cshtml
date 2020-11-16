@@ -1,0 +1,155 @@
+﻿@using Kztek.Web.Core.Functions
+@using Kztek.Model.CustomModel
+@using Kztek.Web.Core.Extensions
+@using Kztek.Web.Core.Functions
+@model  List<Kztek.Model.Models.ReportVehicleInAnyTime>
+@{
+
+    ViewBag.Title = "Xe trong bãi tại thời điểm bất kỳ";
+}
+
+<div class="page-header">
+    <h1>
+        @ViewBag.Title
+    </h1>
+</div>
+
+<div class="row">
+    @using (Html.BeginForm("ReportVehicleAnyTimes", "ReportNew", FormMethod.Get, new { id = "frmReportVehicleInAnyTime" }))
+    {
+
+        <div class="col-md-3 col-xs-12 divboxmd">
+
+            <div class="input-group">
+                @Html.TextBox("fromdate", (string)ViewBag.DateFromPickerValue, new { @class = "form-control daterangpickerMutil" })
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-12 col-xs-12 divboxmd" style="margin-top:15px;">
+            @Html.Action("Actions", "Home", new { ActionName = "Search", ControllerName = "ReportVehicleAnyTimes" })
+
+            @Html.Action("Actions", "Home", new { ActionName = "Index", ControllerName = "ReportVehicleAnyTimes" })
+        </div>
+    }
+</div>
+<div> <hr /></div>
+<div class="row">
+    @using (Html.BeginForm("ReportVehicleAnyTimes", "ReportNew", FormMethod.Get, new { id = "frmReportVehicleInAnyTime" }))
+    {
+       
+        <div class="col-md-3 col-xs-12 divboxmd">
+         <label class="col-sm-12 control-label no-padding-right">Thời điểm</label>
+            <div class="input-group">
+                @Html.TextBox("fromdate", (string)ViewBag.DateFromPickerValue, new { @class = "form-control daterangpickerMutil" })
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12 divboxmd line-height-450" style="margin-top:15px;">
+            @Html.Action("Actions", "Home", new { ActionName = "Search", ControllerName = "ReportVehicleAnyTimes" })
+
+           
+            @Html.Action("Actions", "Home", new { ActionName = "Index", ControllerName = "ReportVehicleAnyTimes" })
+        </div>
+    }
+</div>
+
+<div class="hr hr-18 dotted hr-24"></div>
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table  table-bordered table-hover">
+            <thead>
+                <tr class="headerSort">
+                    <th class="center" width="50"> STT</th>
+                    <th class="text-left" idata="Card"> Tên nhóm<i class=""></i></th>
+                    <th class="center"> Số lượng</th>
+
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.Any())
+                {
+<<<<<<< HEAD
+                    var count = 0;
+                    foreach (var item in Model)
+                    {
+                        count++;
+                        <tr style="@string.Format(count == Model.Count ? "font-weight:bold" : "")">
+                            <td align="center">@count</td>
+                            <td>
+                                <a href="@Url.Action("ReportDetailVehicleAnyTimes", new { vehiclegroupid = item.VehicleGroupID, fromdate = ViewBag.DateFromPickerValue })" target="_blank">
+=======
+
+                    var sum = 0;
+                    foreach (var item in Model.Data)
+                    {
+
+                        <tr >
+                            <td align="center"> @item.RowNumber</td>
+                            <td>
+                                <a href="@Url.Action("ReportDetailVehicleAnyTimes", new { vehiclegroupid = item.VehicleGroupID , fromdate =  ViewBag.DateFromPickerValue})" target="_blank">
+>>>>>>> 17a0d37c649ac4b79c09afb8ea2db3c6e7ca377c
+                                    @item.VehicleGroupName
+                                </a>
+                            </td>
+                            <td align="center">
+                                @item.VehicleCount
+                            </td>
+                        </tr>
+
+                        sum += (Convert.ToInt32(item.VehicleCount));
+
+
+
+
+                    }
+                    <tr>
+                        <td align="center"> </td>
+                        <td>
+                            Tổng
+                        </td>
+
+
+                        <td class="center">@sum</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<<<<<<< HEAD
+@section scripts{
+    
+    <script>
+        $(document).ready(function () {
+
+            $('button[name=btnFilter]').click(function () {
+               
+                $('#frmReportVehicleInAnyTime').submit();
+            });
+        });
+
+
+    </script>
+    
+    }
+=======
+@section scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('button[name=btnFilter]').click(function () {
+                $('#frmReportVehicleInAnyTime').submit();
+            });
+          
+        })
+    </script>
+
+}
+>>>>>>> 17a0d37c649ac4b79c09afb8ea2db3c6e7ca377c

@@ -1,0 +1,306 @@
+﻿@using Kztek.Web.Core.Functions
+@model Kztek.Model.Models.tblCardSubmit
+
+@{
+    ViewBag.Title = "Update";
+}
+<div class="row">
+    @if (TempData["Success"] != null)
+    {
+        <strong style="color:green">@TempData["Success"]</strong>
+    }
+    <strong style="color:red">@ViewBag.Error</strong>
+</div>
+<div class="row">
+    @using (Html.BeginForm("Update", "tblCards", FormMethod.Post, new { encType = "multipart/form-data", @class = "form-horizontal", @role = "form", id = "frm_PK_Card_Update" }))
+    {
+        @Html.Hidden("CustomerID", Model.CustomerID)
+        @Html.HiddenFor(n => n.CardID)
+        <div class="col-xs-12">
+            <h3 class="header smaller light-blue">Thông tin thẻ</h3>
+            <div class="tabbable">
+                <ul class="nav nav-tabs" id="mytab">
+                    <li class="active">
+                        <a data-toggle="tab" href="#cardinfo" aria-expanded="true">
+                            <i class="green ace-icon fa fa-credit-card bigger-125"></i>
+                            Thẻ chính
+                        </a>
+
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="cardinfo">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label-left no-padding-right">Số thẻ<span class="error" style="color:red"> * </span></label>
+                            <div class="col-sm-2 col-xs-12">
+                                @Html.TextBoxFor(n => n.CardNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(n => n.CardNo, "", new { @class = "text-danger" })
+                            </div>
+
+
+                            <label class="col-sm-1 control-label-left no-padding-right"> Mã thẻ <span class="error">*</span></label>
+                            <div class="col-sm-2 col-xs-12">
+
+
+                                @Html.TextBoxFor(n => n.CardNumber, new { @class = "form-control", @style = "border-left: 2px solid #e63232;" })
+
+                                @*@Html.TextBoxFor(n => n.CardNumber, new { @class = "form-control", @style = "border-left: 2px solid #e63232;", @disabled = "disabled" })*@
+
+
+                                @Html.ValidationMessageFor(n => n.CardNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label-left no-padding-right"> Nhóm thẻ <span class="error">*</span></label>
+                            <div class="col-sm-2 col-xs-12">
+                                <div id="boxCardGroup">
+                                    @Html.DropDownListFor(n => n.CardGroupID, new SelectList(ViewBag.lcardgroups, "CardGroupID", "CardGroupName"), "--Lựa chọn--", new { @class = "form-control chosen-select" })
+                                </div>
+                                @Html.ValidationMessageFor(n => n.CardGroupID, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label-left no-padding-right"> Mô tả </label>
+                            <div class="col-sm-6 col-xs-12">
+                                @Html.TextAreaFor(n => n.CardDescription, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(n => n.CardDescription, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label-left no-padding-right"> Đơn vị tấn(m3) </label>
+                            <div class="col-sm-3 col-xs-12">
+                                @Html.TextBoxFor(n => n.DVT, new { @class = "form-control", @type = "number", @min = "0" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label-left no-padding-right"> Ngày đăng ký </label>
+                            <div class="col-sm-2 col-xs-12">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(n => n.DtpDateRegisted, new { @class = "form-control daterangpicker" })
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(n => n.DtpDateRegisted, "", new { @class = "text-danger" })
+                            </div>
+
+                            <label class="col-sm-1 control-label-left no-padding-right"> Ngày cấp phát </label>
+                            <div class="col-sm-2 col-xs-12">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(n => n.DtpDateReleased, new { @class = "form-control daterangpicker" })
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(n => n.DtpDateReleased, "", new { @class = "text-danger" })
+                            </div>
+                            <label class="col-sm-1 control-label-left no-padding-right">Ngày hoạt động </label>
+                            <div class="col-sm-2 col-xs-12">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(n => n.DtpDateActive, new { @class = "form-control daterangpicker", @disabled = "disabled" })
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(n => n.DtpDateActive, "", new { @class = "text-danger" })
+                            </div>
+                            <label class="col-sm-1 control-label-left no-padding-right"> Ngày hết hạn </label>
+                            <div class="col-sm-2 col-xs-12">
+                                <div class="input-group">
+                                    @Html.TextBoxFor(n => n.DtpDateExpired, new { @class = "form-control daterangpicker", @disabled = "disabled" })
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(n => n.DtpDateExpired, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label-left no-padding-right"> </label>
+                            <div class="col-sm-2 col-xs-12">
+                                <label class="inline">
+                                    @Html.CheckBoxFor(n => n.CardInActive, new { @class = "ace" })
+                                    <span class="lbl"> Khóa thẻ </span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <h3 class="header smaller lighter blue"> Thông tin khách hàng</h3>
+            <div class="form-group">
+                <label class="col-sm-1 control-label-left no-padding-right">Tìm kiếm</label>
+                <div class="col-sm-3 col-xs-12">
+                    @Html.TextBox("textSearchCustomer", "", new { @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label-left no-padding-right"> Mã KH <span class="error">*</span></label>
+                <div class="col-sm-3 col-xs-12">
+                    @Html.TextBoxFor(n => n.CustomerCode, new { @class = "form-control", @style = "border-left: 2px solid #e63232;" })
+                    @Html.ValidationMessageFor(n => n.CustomerCode, "", new { @class = "text-danger" })
+                </div>
+                <label class="col-sm-1 control-label-left no-padding-right"> Tên KH </label>
+                <div class="col-sm-3 col-xs-12">
+                    @Html.TextBoxFor(n => n.CustomerName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(n => n.CustomerName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label-left no-padding-right"> Số ĐT </label>
+                <div class="col-sm-3 col-xs-12">
+                    @Html.TextBoxFor(n => n.CustomerMobile, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(n => n.CustomerMobile, "", new { @class = "text-danger" })
+                </div>
+                <label class="col-sm-1 control-label-left no-padding-right"> CMT </label>
+                <div class="col-sm-3 col-xs-12">
+                    @Html.TextBoxFor(n => n.CustomerIdentify, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(n => n.CustomerIdentify, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label-left no-padding-right">Mô tả </label>
+                <div class="col-sm-7 col-xs-12">
+                    @Html.TextAreaFor(n => n.CustomerAddress, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(n => n.CustomerAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label-left no-padding-right"> Nhóm KH <span class="error">*</span></label>
+                <div class="col-sm-3 col-xs-12">
+                    @Html.DropDownListFor(n => n.CustomerGroupID, new SelectList(ViewBag.lcustomergroups, "ItemValue", "ItemText"), new { @class = "form-control chosen-select", @style = "border-left: 2px solid #e63232;" })
+                    @Html.ValidationMessageFor(n => n.CustomerGroupID, "", new { @class = "text-danger" })
+                </div>
+
+
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label-left no-padding-right"> Ảnh đại diện </label>
+                <div class="col-sm-8 col-xs-12">
+                    <div id="BoxRenderFile">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ace-settings-container" id="ace-settings-container" style="position : fixed;top:155px;">
+            <div class="btn btn-app btn-xs btn-grey ace-settings-btn open" id="ace-settings-btn">
+                <i class="ace-icon fa fa-cog bigger-120"></i>
+            </div>
+            <div class="ace-settings-box clearfix open" id="ace-settings-box">
+                <div class="bg-rightbox">
+                    <div class="clearfix lineButton">
+                        <div class=" col-md-12 input-group">
+                            <button class="btn btn-info" type="submit">
+                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                Lưu
+                            </button>
+                            <button class="btn" type="reset">
+                                <i class="ace-icon fa fa-undo bigger-110"></i>
+                                Reset
+                            </button>
+                            <a href="@Url.Action("Index", new { })" class="btn btn-yellow">
+                                <i class="ace-icon fa fa-chevron-circle-left bigger-110"></i>
+                                Quay lại
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+@section scripts{
+
+
+
+
+
+    <script>
+
+
+        $(function () {
+            // bắt sự kiên thay đổi
+            $('body').on('change', 'input[idata = "FileUploadUserController"]', function () {
+                var cmd = $(this);
+                var boxreder = cmd.parent().parent().parent().attr('idata');
+                var result = FileUploadController.PreviewImage(cmd);
+                result.success(function (data) {
+                    $("#" + boxreder).find("Box_" + boxreder).find("#ImageAvatar").attr("src", data);
+                });
+
+            })
+
+        })
+        var FileUploadController = {
+            boxRender: "",
+            nameFileUpload: "",
+            filePathUrl: "",
+            customerId: "",
+             init: function (boxRender, nameFileUpload, filePathUrl, customerId) {
+             this.boxRender = boxRender;
+             this.nameFileUpload = nameFileUpload;
+             this.filePathUrl = filePathUrl;
+              this.customerId = customerId;
+
+        var a = new FileUploadClass(FileUploadController.boxRender, FileUploadController.nameFileUpload, FileUploadController.filePathUrl, FileUploadController.customerId);
+
+        a.LoadData();
+
+            },
+            PreviewImage: function (inputupload) {
+                var file = inputupload.prop('files');
+                var formdata = new FormData();
+                for (var i = 0; i < file.length; i++) {
+                    formdata.append(file[i].name, file[i]);
+                }
+                return $.ajax({
+                    url: '/Parking/tblCards/PreviewImageUpload',
+                    data: formdata,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false
+                });
+            }
+
+        };
+        class FileUploadClass {
+            constructor(boxRender, nameFileUpload, filePathUrl, customerId) {
+                this.boxRender = boxRender;
+                this.nameFileUpload = nameFileUpload;
+                this.filePathUrl = filePathUrl;
+                this.customerId = customerId;
+            }
+            LoadData() {
+                var cmd = $("#" + this.boxRender);
+
+                var model = {
+                    FileUploadName: this.nameFileUpload,
+                    BoxRenderId: this.boxRender,
+                    FilePath: this.filePathUrl,
+                    Base64String: "",
+                    CustomerId: this.customerId
+                };
+                var result = FunctionHelperController.LoadData(model, '/CommonUse/PartialImagePreview');
+                result.success(function (data) {
+                    cmd.html(data);
+
+
+
+                    //JSFileUpload();
+                });
+            }
+        }
+        $(document).ready(function () {
+             FileUploadController.init("BoxRenderFile", "FileUpload", "", "@Model.CustomerID");
+        })
+    </script>
+}

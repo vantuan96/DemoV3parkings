@@ -1,0 +1,72 @@
+﻿@model Kztek.Model.Models.tblCamera
+@using Kztek.Web.Core.Functions
+@{
+    ViewBag.Title = "Update";
+   
+
+    var Dictionary = FunctionHelper.GetLocalizeDictionary("tblCamera", "Update");
+    var DictionaryAction = FunctionHelper.GetLocalizeDictionary("Home", "Action");
+}
+<div class="aaa">
+    <div class="col-xs-12">
+        @using (Html.BeginForm("Updates", "tblCamera", FormMethod.Post, new { encType = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+
+            @Html.HiddenFor(n => n.CameraID)
+
+
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right"> @Dictionary["CameraName"] </label>
+                <div class="col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(n => n.CameraName, new { @class = "form-control", @placeholder = @Dictionary["CameraNamePlaceholder"] })
+                    @Html.ValidationMessageFor(n => n.CameraName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">@Dictionary["HttpURL"]</label>
+                <div class="col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(n => n.HttpURL, new { @class = "form-control", @placeholder = Dictionary["HttpURLPlaceholder"] })
+                    @Html.ValidationMessageFor(n => n.HttpURL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+     
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">@Dictionary["Inactive"]</label>
+                <div class="col-sm-8">
+                    <label class="line-height-250">
+                        @Html.CheckBoxFor(n => n.Inactive, new { @class = "ace" })
+                        <span class="lbl"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="ace-settings-container" id="ace-settings-container" style="position: fixed; top: 155px;">
+                <div class="btn btn-app btn-xs btn-grey ace-settings-btn open" id="ace-settings-btn">
+                    <i class="ace-icon fa fa-cog bigger-130"></i>
+                </div>
+
+                <div class="ace-settings-box clearfix open" id="ace-settings-box">
+                    <!-- /.pull-left -->
+                    <div class="bg-rightbox">
+                        <div class="clearfix lineButton">
+                            <div class="col-md-12 input-group">
+                                <button class="btn btn-success" type="submit" id="Countinue">
+                                    <i class="ace-icon fa fa-refresh bigger-110"></i>
+                                Save
+                                </button>
+                                <button class="btn" type="reset">
+                                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                                  Refresh
+                                </button>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.pull-left -->
+                </div><!-- /.ace-settings-box -->
+            </div>
+        }
+    </div>
+</div>

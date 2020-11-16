@@ -1,0 +1,105 @@
+﻿@using Kztek.Web.Core.Functions
+@{
+    ViewBag.Title = "Gia hạn thẻ";
+   
+}
+<div>
+    <h1>
+        @ViewBag.Title
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-md-2 col-xs-12 divboxmd">
+
+        <label class="">
+            Từ khóa
+        </label>
+        <input type="text" name="key" value="" class="form-control" placeholder="Mã thẻ, Mã khách hàng" />
+    </div>
+    <div class="col-md-2 col-xs-12 divboxmd">
+
+        <label class="">
+            Nhóm thẻ
+        </label>
+        @Html.DropDownList("cargroup",new SelectList ( ViewBag.CardGroup,"CardGroupID","CardGroupName"),"--Select--", new { @class = "form-control chosen-select" })
+
+    </div>
+    <div class="col-md-3 col-xs-12 divbox">
+        <label class="">
+            Nhóm thẻ
+        </label>
+        @Html.DropDownList("customerGr", new SelectList(ViewBag.CustomerGr, "ItemValue", "ItemText"), "--Select--", new { @class = "form-control chosen-select" })
+
+    </div>
+    <div class="col-md-3 col-xs-12 divboxmd line-height-450" style="margin-top:14px;">
+        <button type="button" class="btn btn-sm btn-primary" onclick="earchListCard()">
+            <i class="fa fa-search" aria-hidden="true"></i> Tìm kiếm
+        </button>
+    </div>
+    <div class="">
+        <button type="button" class=""></button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6" col-xs-12 id="boxCards">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        <label class="pos-rel">
+                            <input type="checkbox" name="name" value="" class="ace" id="chkCheckALL" />
+                            <span class="lbl"></span>
+                            </label>
+                    </th>
+                    <th class="text-center">STT</th>
+                    <th class="text-center">Số thẻ</th>
+                    <th class="text-center">Mã thẻ </th>
+                    <th class="text-center">Ngày hết hạn </th>
+                    <th class="text-center">Họ tên </th>
+                    <th class="text-center">Mã khách hàng </th>
+                    <th class="text-center">Nhóm khách hàng </th>
+                    <th class="text-center">Phương tiện</th>
+                    <th class="text-center">Nhóm thẻ </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="col-xs-5">
+            <span class="pull-left pagination">
+                Trang:
+            </span>
+            <span id="pageIndex">0</span>/
+            <span id="pageCount">0</span>-
+            <span>Tổng bản ghi:</span>
+            <span class="numberCard">0</span>
+            <span></span>
+        </div>
+        <div class="col-xs-7">
+            <div id="pagination" class="pull-right"></div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-center">STT</th>
+                    <th class="text-center">Số thẻ</th>
+                    <th class="text-center">Mã thẻ </th>
+                    <th class="text-center">Ngày hết hạn </th>
+                    <th class="text-center">Họ tên </th>
+                    <th class="text-center">Mã khách hàng </th>
+                    <th class="text-center">Nhóm khách hàng </th>
+                    <th class="text-center">Phương tiện</th>
+                    <th class="text-center">Nhóm thẻ </th>
+                    <th>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="RemoveAllExtendCard()">
+                            <i class="fa fa-trash bigger-110" aria-hidden="true"></i>  Xóa hết
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>

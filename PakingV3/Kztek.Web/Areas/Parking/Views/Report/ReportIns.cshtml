@@ -1,0 +1,93 @@
+﻿@using Kztek.Model.CustomModel
+@using Kztek.Web.Core.Extensions
+@using Kztek.Web.Attributes
+@using Kztek.Web.Core.Functions
+@model  PageModel<Kztek.Model.Models.ReportIn>
+@{
+    ViewBag.Title = "ReportIn";
+}
+
+<div class="page-header">
+    @ViewBag.Title
+</div>
+
+<div class="row">
+    @using (Html.BeginForm("ReportIns", "ReportNew", FormMethod.Get, new { id = "frmReportIn" }))
+    {
+
+        <div class="hr hr-18 dotted hr-24"></div>
+        <div class=" row">
+            <div class="col-xs-12">
+                <div class="divScroll">
+                    <table class="">
+                        <thead>
+                            <tr class="headerSort">
+                                <th class="center">STT</th>
+                                <th class="center hidden-480">CardNo</th>
+                                <th class="center">Thời gian vào</th>
+                                <th class="center hidden-480">Số thẻ</th>
+                                <th class="center hidden-480">Khách hàng</th>
+                                <th class="center hidden-480">Ảnh</th>
+                                <th class="center hidden-480">Làn vào</th>
+                                <th class="center hidden-480">Làn ra</th>
+                                <th class="center hidden-480">Giám sát vào </th>
+
+                                <th class="center">Xử lý</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Data.Any())
+                            {
+                                var count = (Model.PageIndex - 1) * Model.PageSize;
+                                foreach (var item in Model.Data)
+                                {
+                                    count++;
+                                    <tr>
+                                        <td class="text-left hidden-480">@item.RowNumber</td>
+                                        <td class="text-left hidden-480">@item.CardNo</td>
+
+                                        @if (item.DateTimeIn != null)
+                                        {
+                                            @Convert.ToDateTime(item.DateTimeIn).ToString("dd/MM/yyyy")
+                                        }
+                                        <td class="text-left hidden-480">@item.CardNumber</td>
+                                        <td class="text-left hidden-480">@item.CustomerName</td>
+                                        <td class="center">
+                                            <div class="ace-thumbnails clearfix">
+                                                @if (!string.IsNullOrWhiteSpace(item.PicIn1))
+                                                {
+                                                    @Html.Action("ImageFTP", new { filename = item.PicIn1, description = "Ảnh", type = "INOUT" })
+                                                }
+                                            </div>
+                                        </td>
+                                        <td class="text-left hidden-480">@item.LaneIDIn</td>
+                                        <td class="text-left hidden-480">@item.LaneIDOut</td>
+                                        <td class="text-left hidden-480">@item.UserIDIn</td>
+                                        <td>
+                                            @if (CheckAuthorizeAction.CheckActionPemission("ReportIn", "Delete"))
+                                            {
+                                                <div class="btn-group">
+                                                    @Html.Action("Actions", "Home", new { ActionName = "Delete", ControllerName = "ReportIns", id = item.Id })
+                                                </div>
+                                            }
+
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            {
+
+                            }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+
